@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../ol.css" rel="stylesheet">
+    <script src="../ol.js"></script>
+    <title>Document</title>
+    <style>
+        <!-- #popup {
+            font-family: iransans !important;
+        } -->
+
+    </style>
+</head>
+
+<body>
+    <div id="container" style="height: 500px;"></div>
+    <div id="popup">
+        <div id="popup-content"></div>
+    </div>
+    
+    <script>
+
+        popup=document.getElementById('popup')
+
+        popupContent=document.getElementById('popup-content')
+
+        var overlay=new ol.Overlay({element:popup})
+
+       
+        const map = new ol.Map({
+            target: 'container',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM({ crossOrigin: null })
+                })
+            ],
+            overlays:[overlay],
+            view: new ol.View({
+                projection: 'EPSG:4326',
+                center: [51, 39],
+                zoom: 5
+            })
+        });
+
+        
+        var zoomslider = new ol.control.ZoomSlider();
+        map.addControl(zoomslider)
+
+        map.on("singleclick", function(evt){var coord=evt.coordinate;
+        console.log(coord);
+        popupContent.innerHTML='<p>'+coord+'</p>'
+        overlay.setPosition(coord)
+    })
+    </script>
+</body>
+
+</html>

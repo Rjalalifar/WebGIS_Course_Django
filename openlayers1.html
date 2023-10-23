@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../ol.css" rel="stylesheet">
+    <script src="../ol.js"></script>
+    <title>Document</title>
+    <style>
+        input {
+            font-family: iransans !important;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div id="akbar" style="height:500px;"></div>
+    
+    <script>
+
+        const map1=new ol.Map({
+            target:'akbar',
+            layers:[new ol.layer.Tile({
+                source: new ol.source.OSM({ crossOrigin: null })
+            })],
+            view:new ol.View({
+                center: [51, 39],
+                zoom: 5
+            })
+        });
+       
+
+
+        
+
+    </script>
+</body>
+
+</html>
