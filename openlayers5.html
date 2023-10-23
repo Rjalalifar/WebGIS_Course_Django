@@ -16,6 +16,11 @@
 
 <body>
     <div id="container" style="height: 500px;"></div>
+    <select id="type">
+        <option value="Point">Point</option>
+        <option value="LineString">LineString</option>
+        <option value="Polygon">Polygon</option>
+    </select>
     <div id="popup">
         <div id="popup-content"></div>
     </div>
@@ -65,11 +70,24 @@
             })
         });
 
-        const draw= new ol.interaction.Draw({
+       var draw;
+
+       var type= document.getElementById('type')
+
+       function addInteraction(){
+          draw= new ol.interaction.Draw({
             source:vectorSource,
-            type:"Point"
-        })
-       map.addInteraction(draw)
+            type:type.value
+        });
+        map.addInteraction(draw)
+       }
+
+       type.onchange = function(){
+
+        map.removeInteraction(draw);
+        addInteraction();
+
+       }
 
         
         var zoomslider = new ol.control.ZoomSlider();
