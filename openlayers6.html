@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../ol.css" rel="stylesheet">
+    <script src="../ol.js"></script>
+    <title>Document</title>
+    <style>
+        /* Your CSS styles here */
+    </style>
+</head>
+
+<body>
+    <div id="container" style="height: 500px;"></div>
+    <select id="type">
+        <option value="Point">Point</option>
+        <option value="LineString">LineString</option>
+        <option value="Polygon">Polygon</option>
+    </select>
+    <div id="popup">
+        <div id="popup-content"></div>
+    </div>
+
+    <script>
+        const geojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": {
+                        "coordinates": [51.36952574764729, 35.71672694608276],
+                        "type": "Point"
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": {
+                        "coordinates": [51.36625449705329, 35.72056325674852],
+                        "type": "Point"
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": {
+                        "coordinates": [
+                            [
+                                [51.370858479371634, 35.715054650298015],
+                                [51.37158542394798, 35.70708617079052],
+                                [51.38915325121289, 35.709545663042604],
+                                [51.37849139742488, 35.71908777450457],
+                                [51.370858479371634, 35.715054650298015]
+                            ]
+                        ],
+                        "type": "Polygon"
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": {
+                        "coordinates": [
+                            [51.37097963679989, 35.7292188688734],
+                            [51.39836121584827, 35.72695669739339],
+                            [51.394968807824654, 35.71515302160937],
+                            [51.395211099836615, 35.71003755207761],
+                            [51.378370217148046, 35.70226534553797]
+                        ],
+                        "type": "LineString"
+                    }
+                }
+            ]
+        };
+
+        // Your existing code
+
+        popup = document.getElementById('popup');
+        popupContent = document.getElementById('popup-content');
+
+        var overlay = new ol.Overlay({ element: popup });
+
+        const vectorSource = new ol.source.Vector();
+
+        const vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: 'red',
+                }),
+                stroke: new ol.style.Stroke({
+                    color: "blue",
+                    width: 2
+                }),
+                image: new ol.style.Circle({
+                    radius: 5,
+                    fill: new ol.style.Fill({
+                        color: "green"
+                    })
+                })
+            })
+        });
+
+        const map = new ol.Map({
+            target: 'container',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM({ crossOrigin: null })
+                }), vectorLayer
+            ],
+            overlays: [overlay],
+            view: new ol.View({
+                projection: 'EPSG:4326',
+                center: [51, 39],
+                zoom: 5
+            })
+        });
+
+        var draw;
+
+        var type = document.getElementById('type');
+
+        function addInteraction() {
+            draw = new ol.interaction.Draw({
+                source: vectorSource,
+                type: type.value
+            });
+            map.addInteraction(draw);
+        }
+
+        type.onchange = function () {
+            map.removeInteraction(draw);
+            addInteraction();
+        }
+
+        var zoomslider = new ol.control.ZoomSlider();
+        map.addControl(zoomslider);
+
+        // Add the following code to load and add the GeoJSON data to the map
+        const geojsonFormat = new ol.format.GeoJSON();
+        const features = geojsonFormat.readFeatures(geojson);
+        vectorSource.addFeatures(features);
+
+    </script>
+</body>
+
+</html>
